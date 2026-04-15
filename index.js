@@ -24,9 +24,6 @@ const transporter = nodemailer.createTransport({
 app.post('/evaluacion', async (req, res) => {
     const { nombre, email, fecha, hotelTransfer, tours, hotel, comentario, calificacion } = req.body;
 
-    if (!nombre || !email || !hotelTransfer || !tours || !hotel || !calificacion) {
-        return res.status(400).json({ mensaje: 'Datos incompletos' });
-    }
 
     try {
         await transporter.sendMail({
@@ -36,7 +33,7 @@ app.post('/evaluacion', async (req, res) => {
             html: `<h2>Nueva solicitud de ${nombre}</h2><p>Fecha: ${fecha}</p>`
         });
 
-        const doc = new PDFDocument({ margin: 50 });
+        const doc = new PDFDocument({ margin: 40 });
         let buffers = [];
         doc.on("data", buffers.push.bind(buffers));
 
@@ -78,11 +75,11 @@ app.post('/evaluacion', async (req, res) => {
         doc.moveTo(50, doc.y).lineTo(550, doc.y).stroke();
         doc.moveDown(0.5);
 
-        hotelTransfer.forEach((ht) => {
-            doc.text(ht.hotelTransfer_name, 50, doc.y, { continued: true });
-            doc.text(ht.hotelTransfer_calificacion, 300, doc.y);
+          //hotelTransfer.forEach((ht) => {
+            doc.text("ds", 50, doc.y, { continued: true });
+            doc.text("ds", 300, doc.y);
             doc.moveDown(0.5);
-        });
+          //});
         doc.moveDown();
 
 
@@ -95,16 +92,13 @@ app.post('/evaluacion', async (req, res) => {
         doc.moveTo(50, doc.y).lineTo(550, doc.y).stroke();
         doc.moveDown(0.5);
 
-        tours.forEach((t) => {
-            doc.text(t.tours_name, 50, doc.y, { continued: true });
-            doc.text(t.tours_calificacion, 300, doc.y);
+         // tours.forEach((t) => {
+            doc.text("ds", 50, doc.y, { continued: true });
+            doc.text("ds", 300, doc.y);
             doc.moveDown(0.5);
-        });
+         // });
         doc.moveDown();
 
-
-
-        
         doc.fontSize(14).fillColor("#244365").text("Calificacion Hoteles, ciudad y Nombre Hotel");
         doc.moveDown(0.5);
 
@@ -114,11 +108,11 @@ app.post('/evaluacion', async (req, res) => {
         doc.moveTo(50, doc.y).lineTo(550, doc.y).stroke();
         doc.moveDown(0.5);
 
-        hotel.forEach((h) => {
-            doc.text(h.hotel_name, 50, doc.y, { continued: true });
-            doc.text(h.hotel_calificacion, 300, doc.y);
+        // hotel.forEach((h) => {
+            doc.text("ds", 50, doc.y, { continued: true });
+            doc.text("ds", 300, doc.y);
             doc.moveDown(0.5);
-        });
+         // });
         doc.moveDown();
 
         doc.fontSize(14).fillColor("#244365").text("Comentarios Generales y/o Sugerencias");
@@ -126,14 +120,13 @@ app.post('/evaluacion', async (req, res) => {
         doc.fontSize(10).fillColor("#1c1c1c").text(comentario);
         doc.moveDown();
 
-        doc.fontSize(14).fillColor("#009f9c").text(`Califiacion de Servicios Brindado: ${calificacion}`);
+        doc.fontSize(14).fillColor("#112228").text(`Califiacion de Servicios Brindado: ${calificacion}`);
         doc.moveDown(1);
-        doc.fontSize(10).fillColor("#1c1c1c").text(calificacion);
 
 
         doc.moveDown();
         doc.fontSize(10).fillColor("gray").text("Gracias por elegir Peru Luxury Journeys.", { align: "center" });
-        
+
         doc.end();
 
     } catch (error) {
