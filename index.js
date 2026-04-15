@@ -22,7 +22,7 @@ const transporter = nodemailer.createTransport({
 });
 
 app.post('/evaluacion', async (req, res) => {
-    const { nombre, email, fecha, hotelTransfer, tours, hotel, comentario, calificacion } = req.body;
+    const { nombre, email, fecha, hotelTransfer, restaurantes,tours, hotel, comentario, calificacion } = req.body;
 
 
     try {
@@ -114,6 +114,26 @@ app.post('/evaluacion', async (req, res) => {
             doc.moveDown(0.5);
         });
         doc.moveDown();
+
+
+
+        doc.fontSize(14).fillColor("#244365").text("Restaurantes");
+        doc.moveDown(0.5);
+
+        doc.fontSize(10).fillColor("black");
+        doc.text("RESTAURANTE", 50, doc.y, { continued: true });
+        doc.text("CALIFICACION", 300, doc.y);
+        doc.moveTo(50, doc.y).lineTo(550, doc.y).stroke();
+        doc.moveDown(0.5);
+
+        restaurantes.forEach((r) => {
+            doc.text(`${r.restaurante_ubicacion} - ${r.restaurante_name}`, 50, doc.y, { continued: true });
+            doc.text(r.restaurante_calificacion, 300, doc.y);
+            doc.moveDown(0.5);
+        });
+        doc.moveDown();
+
+
 
         doc.fontSize(14).fillColor("#244365").text("Comentarios Generales y/o Sugerencias");
         doc.moveDown(1);
