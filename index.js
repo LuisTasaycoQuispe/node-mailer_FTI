@@ -51,7 +51,7 @@ app.post('/evaluacion', async (req, res) => {
                     <hr>
                     <p><small>© 2026 Peru Luxury Journeys | Lima, Perú</small></p>
                 </div>`,
-                attachments: [{ filename: `Evaluation_${nombre}.pdf`, content: pdfData }]
+                attachments: [{ filename: `evaluacion-${nombre}.pdf`, content: pdfData }]
             });
 
             res.json({ mensaje: '¡Correo enviado con éxito!' });
@@ -60,9 +60,9 @@ app.post('/evaluacion', async (req, res) => {
         doc.fillColor("#0d3b66").fillColor("#244365").font("Helvetica-Bold").fontSize(22).text("RESUMEN DE EVALUACIÓN", { align: "center" });
         doc.moveDown();
 
-        doc.fillColor("#333").fontSize(12).text(`Nombre: ${nombre}`);
-        doc.text(`Email: ${email}`);
-        doc.text(`Fecha de Viaje: ${fecha}`);
+        doc.fillColor("#333").fontSize(12).text(`Nombre: ${nombre || "Sin Nombre"}`);
+        doc.text(`Email: ${email || "Sin correo"}`);
+        doc.text(`Fecha de Viaje: ${fecha || "No Fecha"}`);
         doc.moveDown();
 
 
@@ -75,11 +75,11 @@ app.post('/evaluacion', async (req, res) => {
         doc.moveTo(50, doc.y).lineTo(550, doc.y).stroke();
         doc.moveDown(0.5);
 
-          //hotelTransfer.forEach((ht) => {
-            doc.text("ds", 50, doc.y, { continued: true });
-            doc.text("ds", 300, doc.y);
+          hotelTransfer.forEach((ht) => {
+            doc.text(ht.hotelTransfer_name, 50, doc.y, { continued: true });
+            doc.text(ht.hotelTransfer_calificacion, 300, doc.y);
             doc.moveDown(0.5);
-          //});
+         });
         doc.moveDown();
 
 
@@ -92,11 +92,11 @@ app.post('/evaluacion', async (req, res) => {
         doc.moveTo(50, doc.y).lineTo(550, doc.y).stroke();
         doc.moveDown(0.5);
 
-         // tours.forEach((t) => {
-            doc.text("ds", 50, doc.y, { continued: true });
-            doc.text("ds", 300, doc.y);
+         tours.forEach((t) => {
+            doc.text(t.tours_name, 50, doc.y, { continued: true });
+            doc.text(t.tours_calificacion, 300, doc.y);
             doc.moveDown(0.5);
-         // });
+        });
         doc.moveDown();
 
         doc.fontSize(14).fillColor("#244365").text("Calificacion Hoteles, ciudad y Nombre Hotel");
@@ -108,11 +108,11 @@ app.post('/evaluacion', async (req, res) => {
         doc.moveTo(50, doc.y).lineTo(550, doc.y).stroke();
         doc.moveDown(0.5);
 
-        // hotel.forEach((h) => {
-            doc.text("ds", 50, doc.y, { continued: true });
-            doc.text("ds", 300, doc.y);
+        hotel.forEach((h) => {
+            doc.text(h.hotel_name, 50, doc.y, { continued: true });
+            doc.text(h.hotel_calificacion, 300, doc.y);
             doc.moveDown(0.5);
-         // });
+        });
         doc.moveDown();
 
         doc.fontSize(14).fillColor("#244365").text("Comentarios Generales y/o Sugerencias");
