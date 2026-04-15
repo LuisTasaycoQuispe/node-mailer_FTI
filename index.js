@@ -67,6 +67,7 @@ app.post('/evaluacion', async (req, res) => {
         doc.text(`Email: ${email}`);
         doc.text(`Fecha de Viaje: ${fecha}`);
         doc.moveDown();
+        
 
         doc.fontSize(14).fillColor("#244365").text("Calificaciones de Hoteles");
         doc.moveDown(0.5);
