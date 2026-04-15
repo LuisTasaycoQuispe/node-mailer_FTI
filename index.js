@@ -22,9 +22,9 @@ const transporter = nodemailer.createTransport({
 });
 
 app.post('/evaluacion', async (req, res) => {
-    const { nombre, email, fecha, hotelTransfer, tours, hotel, comentario } = req.body;
+    const { nombre, email, fecha, hotelTransfer, tours, hotel, comentario, calificacion } = req.body;
 
-    if (!nombre || !email || !hotelTransfer || !tours || !hotel ) {
+    if (!nombre || !email || !hotelTransfer || !tours || !hotel || !calificacion) {
         return res.status(400).json({ mensaje: 'Datos incompletos' });
     }
 
@@ -67,7 +67,7 @@ app.post('/evaluacion', async (req, res) => {
         doc.text(`Email: ${email}`);
         doc.text(`Fecha de Viaje: ${fecha}`);
         doc.moveDown();
-        
+
 
         doc.fontSize(14).fillColor("#244365").text("Calificaciones de Hoteles");
         doc.moveDown(0.5);
@@ -121,15 +121,14 @@ app.post('/evaluacion', async (req, res) => {
         });
         doc.moveDown();
 
-
-
-
-
         doc.fontSize(14).fillColor("#244365").text("Comentarios Generales y/o Sugerencias");
         doc.moveDown(1);
         doc.fontSize(10).fillColor("#1c1c1c").text(comentario);
+        doc.moveDown();
 
-
+        doc.fontSize(14).fillColor("#009f9c").text(`Califiacion de Servicios Brindado: ${calificacion}`);
+        doc.moveDown(1);
+        doc.fontSize(10).fillColor("#1c1c1c").text(calificacion);
 
 
         doc.moveDown();
