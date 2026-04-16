@@ -2,6 +2,7 @@ const express = require('express');
 const nodemailer = require('nodemailer');
 const cors = require('cors');
 const PDFDocument = require("pdfkit");
+const path = require("path");
 
 const app = express();
 app.use(cors());
@@ -22,130 +23,232 @@ const transporter = nodemailer.createTransport({
 });
 
 app.post('/evaluacion', async (req, res) => {
-    const { nombre, email, fecha, hotelTransfer, restaurantes,tours, hotel, comentario, calificacion } = req.body;
-
+    const { nombre, email, fecha, hotelTransfer = [], restaurantes = [], tours = [], hotel = [], comentario, calificacion } = req.body;
 
     try {
-        await transporter.sendMail({
-            from: `"Web Contacto" <${EMAIL_USER}>`,
-            to: EMAIL_USER,
-            subject: 'Nueva evaluación de viaje recibida',
-            html: `<h2>Nueva solicitud de ${nombre}</h2><p>Fecha: ${fecha}</p>`
-        });
-
-        const doc = new PDFDocument({ margin: 40 });
+         const doc = new PDFDocument({ margin: 50 });
         let buffers = [];
+
         doc.on("data", buffers.push.bind(buffers));
 
         doc.on("end", async () => {
             const pdfData = Buffer.concat(buffers);
+
 
             await transporter.sendMail({
                 from: `"Peru Luxury Journeys" <${EMAIL_USER}>`,
                 to: email,
                 subject: 'Your Travel Evaluation Summary',
                 html: `
-                <div style="font-family: Arial, sans-serif; color: #333;">
-                    <h1 style="color: #0d3b66;">Thank you, ${nombre}!</h1>
-                    <p>We have received your evaluation. Please find the summary attached as a PDF.</p>
-                    <hr>
-                    <p><small>© 2026 Peru Luxury Journeys | Lima, Perú</small></p>
-                </div>`,
+                
+<div style="font-family: Arial, sans-serif; color:#333; max-width:600px; margin:auto;">
+    
+    <h2 style="text-align:center; color:#2e7d32;">RESUMEN DE EVALUACIÓN</h2>
+
+    <p style="text-align:center;">
+        <strong>${nombre}</strong><br>
+        ${email}<br>
+        ${fecha}
+    </p>
+
+    <hr>
+
+    <h3 style="color:#2e7d32;">Hotel Transfer</h3>
+    ${hotelTransfer.map(i => `
+        <div style="display:flex; justify-content:space-between; border-bottom:1px solid #eee; padding:4px 0;">
+            <span>${i.hotelTransfer_name || "-"}</span>
+            <strong>${i.hotelTransfer_calificacion || "-"}</strong>
+        </div>
+    `).join("")}
+
+    <h3 style="color:#2e7d32; margin-top:15px;">Tours y Guías</h3>
+    ${tours.map(i => `
+        <div style="display:flex; justify-content:space-between; border-bottom:1px solid #eee; padding:4px 0;">
+            <span>${i.tours_name || "-"}</span>
+            <strong>${i.tours_calificacion || "-"}</strong>
+        </div>
+    `).join("")}
+
+    <h3 style="color:#2e7d32; margin-top:15px;">Hoteles</h3>
+    ${hotel.map(i => `
+        <div style="display:flex; justify-content:space-between; border-bottom:1px solid #eee; padding:4px 0;">
+            <span>${(i.hotel_ubicacion || "-") + " - " + (i.hotel_name || "-")}</span>
+            <strong>${i.hotel_calificacion || "-"}</strong>
+        </div>
+    `).join("")}
+
+    <h3 style="color:#2e7d32; margin-top:15px;">Restaurantes</h3>
+    ${restaurantes.map(i => `
+        <div style="display:flex; justify-content:space-between; border-bottom:1px solid #eee; padding:4px 0;">
+            <span>${(i.restaurante_ubicacion || "-") + " - " + (i.restaurante_name || "-")}</span>
+            <strong>${i.restaurante_calificacion || "-"}</strong>
+        </div>
+    `).join("")}
+
+    <h3 style="color:#2e7d32; margin-top:15px;">Comentarios</h3>
+    <p style="background:#f5f5f5; padding:10px; border-radius:6px;">
+        ${comentario || "Sin comentarios"}
+    </p>
+
+    <h3 style="text-align:center; color:#2e7d32;">
+        Calificación general: ${calificacion}
+    </h3>
+
+    <hr>
+
+    <p style="text-align:center; font-size:12px; color:#888;">
+        Gracias por elegir Peru Luxury Journeys
+    </p>
+
+</div>
+
+                `,
                 attachments: [{ filename: `evaluacion-${nombre}.pdf`, content: pdfData }]
             });
 
             res.json({ mensaje: '¡Correo enviado con éxito!' });
         });
 
-        doc.fillColor("#0d3b66").fillColor("#244365").font("Helvetica-Bold").fontSize(22).text("RESUMEN DE EVALUACIÓN", { align: "center" });
-        doc.moveDown();
+              const green = "#2e7d32";
+        const gray = "#666";
+        const pageWidth = doc.page.width;
+        const centerX = pageWidth / 2;
 
-        doc.fillColor("#333").fontSize(12).text(`Nombre: ${nombre || "Sin Nombre"}`);
-        doc.text(`Email: ${email || "Sin correo"}`);
-        doc.text(`Fecha de Viaje: ${fecha || "No Fecha"}`);
-        doc.moveDown();
+        // LOGO
+        doc.image(path.join("path/logo-fti-esp.png"), centerX - 40, 30, { width: 80 });
 
+        doc.moveDown(4);
 
-        doc.fontSize(14).fillColor("#244365").text("Calificaciones de Hoteles");
+        // TITULO
+        doc.fillColor("#000")
+            .font("Helvetica-Bold")
+            .fontSize(18)
+            .text("Resumen de Evaluación", { align: "center" });
+
         doc.moveDown(0.5);
 
-        doc.fontSize(10).fillColor("black");
-        doc.text("UBICACION/HOTEL", 50, doc.y, { continued: true });
-        doc.text("CALIFICACION", 300, doc.y);
-        doc.moveTo(50, doc.y).lineTo(550, doc.y).stroke();
-        doc.moveDown(0.5);
+        // LINEA
+        doc.moveTo(150, doc.y).lineTo(450, doc.y).strokeColor("#ddd").stroke();
 
-          hotelTransfer.forEach((ht) => {
-            doc.text(ht.hotelTransfer_name, 50, doc.y, { continued: true });
-            doc.text(ht.hotelTransfer_calificacion, 300, doc.y);
-            doc.moveDown(0.5);
-         });
-        doc.moveDown();
-
-
-        doc.fontSize(14).fillColor("#244365").text("Calificacion de Tours y Guias Turisticos");
-        doc.moveDown(0.5);
-
-        doc.fontSize(10).fillColor("black");
-        doc.text("TOURS", 50, doc.y, { continued: true });
-        doc.text("CALIFICACION", 300, doc.y);
-        doc.moveTo(50, doc.y).lineTo(550, doc.y).stroke();
-        doc.moveDown(0.5);
-
-         tours.forEach((t) => {
-            doc.text(t.tours_name, 50, doc.y, { continued: true });
-            doc.text(t.tours_calificacion, 300, doc.y);
-            doc.moveDown(0.5);
-        });
-        doc.moveDown();
-
-        doc.fontSize(14).fillColor("#244365").text("Calificacion Hoteles, ciudad y Nombre Hotel");
-        doc.moveDown(0.5);
-
-        doc.fontSize(10).fillColor("black");
-        doc.text("HOTEL", 50, doc.y, { continued: true });
-        doc.text("CALIFICACION", 300, doc.y);
-        doc.moveTo(50, doc.y).lineTo(550, doc.y).stroke();
-        doc.moveDown(0.5);
-
-        hotel.forEach((h) => {
-            doc.text(`${h.hotel_ubicacion} - ${h.hotel_name}`, 50, doc.y, { continued: true });
-            doc.text(h.hotel_calificacion, 300, doc.y);
-            doc.moveDown(0.5);
-        });
-        doc.moveDown();
-
-
-
-        doc.fontSize(14).fillColor("#244365").text("Restaurantes");
-        doc.moveDown(0.5);
-
-        doc.fontSize(10).fillColor("black");
-        doc.text("RESTAURANTE", 50, doc.y, { continued: true });
-        doc.text("CALIFICACION", 300, doc.y);
-        doc.moveTo(50, doc.y).lineTo(550, doc.y).stroke();
-        doc.moveDown(0.5);
-
-        restaurantes.forEach((r) => {
-            doc.text(`${r.restaurante_ubicacion} - ${r.restaurante_name}`, 50, doc.y, { continued: true });
-            doc.text(r.restaurante_calificacion, 300, doc.y);
-            doc.moveDown(0.5);
-        });
-        doc.moveDown();
-
-
-
-        doc.fontSize(14).fillColor("#244365").text("Comentarios Generales y/o Sugerencias");
-        doc.moveDown(1);
-        doc.fontSize(10).fillColor("#1c1c1c").text(comentario);
-        doc.moveDown();
-
-        doc.fontSize(14).fillColor("#112228").text(`Califiacion de Servicios Brindado: ${calificacion}`);
         doc.moveDown(1);
 
+        // DATOS
+        doc.fillColor(gray)
+            .fontSize(10)
+            .font("Helvetica")
+            .text(nombre || "-", { align: "center" })
+            .text(email || "-", { align: "center" })
+            .text(fecha || "-", { align: "center" });
 
-        doc.moveDown();
-        doc.fontSize(10).fillColor("gray").text("Gracias por elegir Peru Luxury Journeys.", { align: "center" });
+        doc.moveDown(2);
+
+        // FUNCION PARA SECCIONES
+        const drawSection = (titulo, data, getName, getValue) => {
+            doc.fillColor(green)
+                .font("Helvetica-Bold")
+                .fontSize(12)
+                .text(titulo);
+
+            doc.moveDown(0.5);
+
+            const startX = 60;
+            const endX = 500;
+
+            data.forEach(item => {
+                const y = doc.y;
+
+                // izquierda
+                doc.fillColor("#000")
+                    .font("Helvetica")
+                    .fontSize(10)
+                    .text(getName(item), startX, y, {
+                        width: 300
+                    });
+
+                // derecha
+                doc.fillColor(green)
+                    .font("Helvetica-Bold")
+                    .text(getValue(item), startX, y, {
+                        width: endX - startX,
+                        align: "right"
+                    });
+
+                doc.moveDown(0.4);
+
+                // linea fina
+                doc.moveTo(startX, doc.y)
+                    .lineTo(endX, doc.y)
+                    .strokeColor("#eee")
+                    .stroke();
+
+                doc.moveDown(0.4);
+            });
+
+            doc.moveDown(1);
+        };
+
+        // SECCIONES
+        drawSection(
+            "Hotel Transfer",
+            hotelTransfer,
+            (i) => i.hotelTransfer_name || "-",
+            (i) => i.hotelTransfer_calificacion || "-"
+        );
+
+        drawSection(
+            "Tours y Guías",
+            tours,
+            (i) => i.tours_name || "-",
+            (i) => i.tours_calificacion || "-"
+        );
+
+        drawSection(
+            "Hoteles",
+            hotel,
+            (i) => `${i.hotel_ubicacion || "-"} - ${i.hotel_name || "-"}`,
+            (i) => i.hotel_calificacion || "-"
+        );
+
+        drawSection(
+            "Restaurantes",
+            restaurantes,
+            (i) => `${i.restaurante_ubicacion || "-"} - ${i.restaurante_name || "-"}`,
+            (i) => i.restaurante_calificacion || "-"
+        );
+
+        // COMENTARIOS
+        doc.fillColor(green)
+            .font("Helvetica-Bold")
+            .fontSize(12)
+            .text("Comentarios");
+
+        doc.moveDown(0.5);
+
+        doc.fillColor("#333")
+            .font("Helvetica")
+            .fontSize(10)
+            .text(comentario || "Sin comentarios", {
+                width: 480,
+                align: "left"
+            });
+
+        doc.moveDown(2);
+
+        // CALIFICACION FINAL
+        doc.fillColor("#000")
+            .font("Helvetica-Bold")
+            .fontSize(12)
+            .text(`Calificación general: ${calificacion}`, {
+                align: "center"
+            });
+
+        doc.moveDown(2);
+
+        doc.fillColor("#aaa")
+            .fontSize(9)
+            .text("Gracias por confiar en Peru Luxury Journeys", {
+                align: "center"
+            });
 
         doc.end();
 
