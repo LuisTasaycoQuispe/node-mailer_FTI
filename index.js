@@ -5,7 +5,7 @@ const PDFDocument = require("pdfkit");
 
 
 const corsOptions = {
-  origin: 'http://localhost:3000', 
+  origin: 'https://evaluacion-viajes.netlify.app', 
   optionsSuccessStatus: 200 
 };
 
