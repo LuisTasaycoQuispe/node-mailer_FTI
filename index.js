@@ -383,7 +383,7 @@ app.post('/evaluacion', async (req, res) => {
 
         doc.fillColor("#aaa")
             .fontSize(9)
-            .text("Fiesta Tours Peru", {
+            .text("Fiesta Tours Peru & Peru Luxury Journeys", {
                 align: "center"
             });
 
