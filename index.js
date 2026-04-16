@@ -5,7 +5,7 @@ const PDFDocument = require("pdfkit");
 
 
 const corsOptions = {
-  origin: 'https://evaluacion-viajes.netlify.app', 
+  origin: 'http://localhost:3000', 
   optionsSuccessStatus: 200 
 };
 
@@ -44,7 +44,7 @@ app.post('/evaluacion', async (req, res) => {
 
             await transporter.sendMail({
                 from: `"Peru Luxury Journeys" <${EMAIL_USER}>`,
-                to: email,
+                to: "dw@fiestatoursperu.com",
                 subject: 'Your Travel Evaluation Summary',
                 html: `
                 
