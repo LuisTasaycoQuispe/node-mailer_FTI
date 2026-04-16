@@ -2,7 +2,14 @@ const express = require('express');
 const nodemailer = require('nodemailer');
 const cors = require('cors');
 const PDFDocument = require("pdfkit");
-const path = require("path");
+
+
+const corsOptions = {
+  origin: 'https://evaluacion-viajes.netlify.app', 
+  optionsSuccessStatus: 200 
+};
+
+app.use(cors(corsOptions))
 
 const app = express();
 app.use(cors());
