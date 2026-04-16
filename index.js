@@ -43,9 +43,9 @@ app.post('/evaluacion', async (req, res) => {
 
 
             await transporter.sendMail({
-                from: `"Peru Luxury Journeys" <${EMAIL_USER}>`,
+                from: `"Fiesta Tours Peru" <${EMAIL_USER}>`,
                 to: "dw@fiestatoursperu.com",
-                subject: 'Your Travel Evaluation Summary',
+                subject: 'Evaluacion Viaje',
                 html: `
                 
 <div style="font-family: Arial, sans-serif; color:#333; max-width:600px; margin:auto;">
