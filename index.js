@@ -44,7 +44,7 @@ app.post('/evaluacion', async (req, res) => {
             await transporter.sendMail({
                 from: `"Fiesta Tours Peru" <${EMAIL_USER}>`,
                 to: "marco.paredes@fiestatoursperu.com",
-                subject: 'Evaluacion Viaje',
+                subject: `Evaluacion Viaje - ${nombre}`,
                 html: `
                     <div style="background:#f4f6f5; padding:20px 0;">
                     <table width="100%" cellpadding="0" cellspacing="0" style="font-family: Arial, sans-serif;">
@@ -200,17 +200,18 @@ app.post('/evaluacion', async (req, res) => {
             .fontSize(18)
             .text("Resumen de Evaluación", { align: "center" });
 
-        doc.moveDown(0.5);
+        doc.moveDown(0.4);
 
 
-        doc.moveDown(1);
-
-        doc.fillColor(gray)
+        doc.fillColor("#6d6d6d")
             .fontSize(10)
             .font("Helvetica")
-            .text(nombre || "-", { align: "center" })
-            .text(email || "-", { align: "center" })
-            .text(fecha || "-", { align: "center" });
+            .text(`Pasj: ${nombre}` || "-", { align: "start" })
+            .text(`Correo: ${email}` || "-", { align: "start" })
+            .text(`Fecha: ${fecha}` || "-", { align: "start" });
+
+        
+
 
         doc.moveDown(2);
 
@@ -372,10 +373,10 @@ app.post('/evaluacion', async (req, res) => {
 
         doc.moveDown(2);
 
-        doc.fillColor("#000")
+        doc.fillColor("#1f1f1f")
             .font("Helvetica-Bold")
             .fontSize(12)
-            .text(`Calificación general: ${calificacion}`, {
+            .text(`Calificación general: ${calificacion} /10`, {
                 align: "center"
             });
 
