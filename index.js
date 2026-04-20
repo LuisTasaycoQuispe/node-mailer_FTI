@@ -5,8 +5,8 @@ const PDFDocument = require("pdfkit");
 
 
 const corsOptions = {
-  origin: 'https://evaluacion-viajes.netlify.app', 
-  optionsSuccessStatus: 200 
+  origin: '*',
+  optionsSuccessStatus: 200
 };
 
 
@@ -40,7 +40,7 @@ app.post('/evaluacion', async (req, res) => {
         doc.on("end", async () => {
             const pdfData = Buffer.concat(buffers);
 
-
+// marco.paredes@fiestatoursperu.com
             await transporter.sendMail({
                 from: `"Fiesta Tours Peru" <${EMAIL_USER}>`,
                 to: "marco.paredes@fiestatoursperu.com",
@@ -52,7 +52,7 @@ app.post('/evaluacion', async (req, res) => {
                         <td align="center">
 
                             <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff; border-radius:8px; padding:20px;">
-                            
+
                             <!-- Titulo -->
                             <tr>
                                 <td align="center" style="padding-bottom:10px;">
@@ -203,14 +203,28 @@ app.post('/evaluacion', async (req, res) => {
         doc.moveDown(0.4);
 
 
-        doc.fillColor("#6d6d6d")
-            .fontSize(10)
-            .font("Helvetica")
-            .text(`Pasj: ${nombre}` || "-", { align: "start" })
-            .text(`Correo: ${email}` || "-", { align: "start" })
-            .text(`Fecha: ${fecha}` || "-", { align: "start" });
+    doc.moveDown(0.5);
 
-        
+    const labelColor = "#999";
+    const valueColor = "#222";
+
+    const drawField = (label, value) => {
+        doc
+            .fillColor(labelColor)
+            .font("Helvetica-Bold")
+            .text(label, { continued: true });
+
+        doc
+            .fillColor(valueColor)
+            .font("Helvetica")
+            .text(value || "-", { align: "left" });
+
+        doc.moveDown(0.3);
+    };
+
+    drawField("Pasajero: ", nombre);
+    drawField("Correo: ", email);
+    drawField("Fecha: ", fecha);
 
 
         doc.moveDown(2);
@@ -312,7 +326,7 @@ app.post('/evaluacion', async (req, res) => {
         );
 
 
-        
+
         doc.fillColor(green)
             .font("Helvetica-Bold")
             .fontSize(12)
@@ -337,7 +351,7 @@ app.post('/evaluacion', async (req, res) => {
             (i) => `${i.restaurante_ubicacion || "-"} - ${i.restaurante_name || "-"}`,
             (i) => i.restaurante_calificacion || "-"
         );
-        
+
         doc.fillColor(green)
             .font("Helvetica-Bold")
             .fontSize(12)
