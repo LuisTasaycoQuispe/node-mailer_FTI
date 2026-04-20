@@ -43,7 +43,7 @@ app.post('/evaluacion', async (req, res) => {
 // marco.paredes@fiestatoursperu.com
             await transporter.sendMail({
                 from: `"Fiesta Tours Peru" <${EMAIL_USER}>`,
-                to: "luistasayco3030@gmail.com",
+                to: "marco.paredes@fiestatoursperu.com",
                 subject: `Evaluacion Viaje - ${nombre}`,
                 html: `
                     <div style="background:#f4f6f5; padding:20px 0;">
@@ -222,9 +222,17 @@ app.post('/evaluacion', async (req, res) => {
         doc.moveDown(0.3);
     };
 
-    drawField("Pasajero: ", nombre);
-    drawField("Correo: ", email);
-    drawField("Fecha: ", fecha);
+    
+    doc.moveDown(1);
+
+        doc.fillColor(gray)
+            .fontSize(10)
+            .font("Helvetica")
+            .text(nombre || "-", { align: "center" })
+            .text(email || "-", { align: "center" })
+            .text(fecha || "-", { align: "center" });
+
+        doc.moveDown(2);
 
 
         doc.moveDown(2);
