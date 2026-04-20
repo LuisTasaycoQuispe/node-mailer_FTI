@@ -43,7 +43,7 @@ app.post('/evaluacion', async (req, res) => {
 // marco.paredes@fiestatoursperu.com
             await transporter.sendMail({
                 from: `"Fiesta Tours Peru" <${EMAIL_USER}>`,
-                to: "marco.paredes@fiestatoursperu.com",
+                to: "dw@fiestatoursperu.com",
                 subject: `Evaluacion Viaje - ${nombre}`,
                 html: `
                     <div style="background:#f4f6f5; padding:20px 0;">
@@ -88,6 +88,8 @@ app.post('/evaluacion', async (req, res) => {
                                     `).join("")}
                                 </table>
                                 </td>
+                                <h3 style="color:#2e7d32;">Comentario Hotel Transfer</h3>
+                                <p>${comentarioHotelTransfer}</p>
                             </tr>
 
                             <!-- Tours -->
@@ -107,6 +109,8 @@ app.post('/evaluacion', async (req, res) => {
                                     `).join("")}
                                 </table>
                                 </td>
+                                <h3 style="color:#2e7d32;">Comentario Tours</h3>
+                                <p>${comentariosToursGuia}</p>
                             </tr>
 
                             <!-- Hoteles -->
@@ -126,6 +130,8 @@ app.post('/evaluacion', async (req, res) => {
                                     `).join("")}
                                 </table>
                                 </td>
+                                 <h3 style="color:#2e7d32;">Comentario Hotel</h3>
+                                <p>${comentarioHotel}</p>
                             </tr>
 
                             <!-- Restaurantes -->
@@ -145,6 +151,9 @@ app.post('/evaluacion', async (req, res) => {
                                     `).join("")}
                                 </table>
                                 </td>
+                                <h3 style="color:#2e7d32;">Comentario Restaurante</h3>
+                                <p>${comentarioRestaurante}</p>
+                                        
                             </tr>
 
                             <!-- Comentarios -->
