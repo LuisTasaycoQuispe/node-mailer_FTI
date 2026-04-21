@@ -219,7 +219,7 @@ app.post('/evaluacion', async (req, res) => {
                     <!-- Datos Email -->
                     <tr>
                     <td>
-                    <h3 style="color:#105A40;">DATOS DE E-MAIL</h3>
+                    <h3 style="color:#105A40;">Email</h3>
                     <div style="background:#f4f6f5; border:1px solid #e0e0e0; padding:12px; border-radius:6px; font-size:14px;">
                     ${email || " - "}
                     </div>
@@ -238,7 +238,7 @@ app.post('/evaluacion', async (req, res) => {
 
                     <tr>
                     <td align="center" style="font-size:12px; color:#888;">
-                    Gracias por elegir Peru Luxury Journeys
+                    Fiesta Tours Peru & Peru Luxury Journeys
                     </td>
                     </tr>
 
@@ -423,7 +423,7 @@ app.post('/evaluacion', async (req, res) => {
         .fontSize(10)                
         .font("Helvetica-Bold")
 
-        .text('DATOS DE E-MAIL: ', { continued: true });
+        .text('Email: ', { continued: true });
 
         checkPageBreak();
 
