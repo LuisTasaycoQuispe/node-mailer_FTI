@@ -1,11 +1,19 @@
 const express = require('express');
 const nodemailer = require('nodemailer');
-const cors = require('cors');
 const PDFDocument = require("pdfkit");
 
 const app = express();
+const cors = require('cors');
 
-app.use(cors());
+const corsOptions = {
+    origin: 'https://evaluacion-viajes.netlify.app',
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type'],
+    credentials: false
+};
+
+app.use(cors(corsOptions));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -47,7 +55,7 @@ app.post('/evaluacion', async (req, res) => {
 
             await transporter.sendMail({
                 from: `"Fiesta Tours Peru" <${EMAIL_USER}>`,
-                to: "marco.paredes@fiestatoursperu.com",
+                to: "dw@fiestatoursperu.com",
                 subject: `Evaluacion Viaje - ${nombre}`,
                   html: `
                     <div style="background:#f4f6f5; padding:20px 0;">
