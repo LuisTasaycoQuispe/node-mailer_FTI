@@ -75,9 +75,7 @@ app.post('/evaluacion', async (req, res) => {
                     <!-- Datos -->
                     <tr>
                     <td align="center" style="font-size:14px; color:#555;">
-                    <strong>
-                    <span style="color:green;">Idioma Registrado: </span>${idiomaFinal}
-                    </strong><br>
+                    <br>
                     <strong>${nombre}</strong><br>
                     ${email}<br>
                     ${fecha}
