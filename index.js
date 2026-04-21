@@ -32,7 +32,7 @@ const transporter = nodemailer.createTransport({
 
 app.post('/evaluacion', async (req, res) => {
     const {
-        idioma, nombre, email, fecha,
+        nombre, email, fecha,
         hotelTransfer = [], restaurantes = [],
         tours = [], hotel = [],
         comentarioHotelTransfer,
@@ -43,6 +43,7 @@ app.post('/evaluacion', async (req, res) => {
         calificacion
     } = req.body;
 
+    const idioma = (req.body.idioma || "").toLowerCase();
 
     const idiomasValidos = {
         es: "Español",
@@ -50,9 +51,7 @@ app.post('/evaluacion', async (req, res) => {
         pr: "Portugués"
     };
 
-    const idiomaNormalizado = (idioma || "es").toLowerCase();
-    const idiomaFinal = idiomasValidos[idiomaNormalizado] || "Español";
-
+    const idiomaFinal = idiomasValidos[idioma] || "Español";
     try {
 
         const doc = new PDFDocument({ margin: 50 });
