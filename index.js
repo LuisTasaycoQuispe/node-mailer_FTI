@@ -40,7 +40,7 @@ app.post('/evaluacion', async (req, res) => {
         doc.on("end", async () => {
             const pdfData = Buffer.concat(buffers);
 
-// marco.paredes@fiestatoursperu.com
+            // marco.paredes@fiestatoursperu.com
             await transporter.sendMail({
                 from: `"Fiesta Tours Peru" <${EMAIL_USER}>`,
                 to: "dw@fiestatoursperu.com",
@@ -48,160 +48,186 @@ app.post('/evaluacion', async (req, res) => {
                 html: `
                     <div style="background:#f4f6f5; padding:20px 0;">
                     <table width="100%" cellpadding="0" cellspacing="0" style="font-family: Arial, sans-serif;">
-                        <tr>
-                        <td align="center">
+                    <tr>
+                    <td align="center">
 
-                            <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff; border-radius:8px; padding:20px;">
+                    <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff; border-radius:8px; padding:20px;">
 
-                            <!-- Titulo -->
-                            <tr>
-                                <td align="center" style="padding-bottom:10px;">
-                                <h2 style="color:#2e7d32; margin:0;">RESUMEN DE EVALUACIÓN</h2>
-                                </td>
-                            </tr>
+                    <!-- Titulo -->
+                    <tr>
+                    <td align="center" style="padding-bottom:10px;">
+                    <h2 style="color:#2e7d32; margin:0;">RESUMEN DE EVALUACIÓN</h2>
+                    </td>
+                    </tr>
 
-                            <!-- Datos -->
-                            <tr>
-                                <td align="center" style="font-size:14px; color:#555;">
-                                <strong>${nombre}</strong><br>
-                                ${email}<br>
-                                ${fecha}
-                                </td>
-                            </tr>
+                    <!-- Datos -->
+                    <tr>
+                    <td align="center" style="font-size:14px; color:#555;">
+                    <strong>${nombre}</strong><br>
+                    ${email}<br>
+                    ${fecha}
+                    </td>
+                    </tr>
 
-                            <tr><td height="15"></td></tr>
+                    <tr><td height="20"></td></tr>
 
-                            <!-- Hotel Transfer -->
-                            <tr>
-                                <td>
-                                <h3 style="color:#2e7d32;">Hotel Transfer</h3>
-                                <table width="100%">
-                                    ${hotelTransfer.map(i => `
-                                    <tr>
-                                        <td style="padding:6px 0; border-bottom:1px solid #eee;">
-                                        ${i.hotelTransfer_name || "-"}
-                                        </td>
-                                        <td align="right" style="padding:6px 0; border-bottom:1px solid #eee; font-weight:bold;">
-                                        ${i.hotelTransfer_calificacion || "-"}
-                                        </td>
-                                    </tr>
-                                    `).join("")}
-                                </table>
-                                </td>
-                                <td>
+                    <!-- HOTEL TRANSFER -->
+                    <tr>
+                    <td>
+                    <h3 style="color:#2e7d32;">Hotel Transfer</h3>
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                    ${hotelTransfer.map(i => `
+                    <tr>
+                    <td style="padding:6px 0; border-bottom:1px solid #eee;">
+                    ${i.hotelTransfer_name || "-"}
+                    </td>
+                    <td align="right" style="padding:6px 0; border-bottom:1px solid #eee; font-weight:bold;">
+                    ${i.hotelTransfer_calificacion || "-"}
+                    </td>
+                    </tr>
+                    `).join("")}
+                    </table>
+                    </td>
+                    </tr>
 
-                                <h3 style="color:#2e7d32;">Comentario Hotel Transfer</h3>
-                                <p>${comentarioHotelTransfer}</p>
-                                                                </td>
+                    <tr>
+                    <td style="padding-top:10px;">
+                    <h3 style="color:#2e7d32;">Comentario Hotel Transfer</h3>
+                    <div style="background:#f9fbf9; border-left:4px solid #2e7d32; padding:10px; border-radius:6px; font-size:14px;">
+                    ${comentarioHotelTransfer || "<i style='color:#999;'>Sin comentarios</i>"}
+                    </div>
+                    </td>
+                    </tr>
 
-                            </tr>
+                    <tr><td height="20"></td></tr>
 
-                            <!-- Tours -->
-                            <tr>
-                                <td style="padding-top:15px;">
-                                <h3 style="color:#2e7d32;">Tours y Guías</h3>
-                                <table width="100%">
-                                    ${tours.map(i => `
-                                    <tr>
-                                        <td style="padding:6px 0; border-bottom:1px solid #eee;">
-                                        ${i.tours_name || "-"}
-                                        </td>
-                                        <td align="right" style="padding:6px 0; border-bottom:1px solid #eee; font-weight:bold;">
-                                        ${i.tours_calificacion || "-"}
-                                        </td>
-                                    </tr>
-                                    `).join("")}
-                                </table>
-                                </td>
-                                <td>
+                    <!-- TOURS -->
+                    <tr>
+                    <td>
+                    <h3 style="color:#2e7d32;">Tours y Guías</h3>
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                    ${tours.map(i => `
+                    <tr>
+                    <td style="padding:6px 0; border-bottom:1px solid #eee;">
+                    ${i.tours_name || "-"}
+                    </td>
+                    <td align="right" style="padding:6px 0; border-bottom:1px solid #eee; font-weight:bold;">
+                    ${i.tours_calificacion || "-"}
+                    </td>
+                    </tr>
+                    `).join("")}
+                    </table>
+                    </td>
+                    </tr>
 
-                                <h3 style="color:#2e7d32;">Comentario Tours</h3>
-                                <p>${comentariosToursGuia}</p>
-                                                                </td>
+                    <tr>
+                    <td style="padding-top:10px;">
+                    <h3 style="color:#2e7d32;">Comentario Tours</h3>
+                    <div style="background:#f9fbf9; border-left:4px solid #2e7d32; padding:10px; border-radius:6px; font-size:14px;">
+                    ${comentariosToursGuia || "<i style='color:#999;'>Sin comentarios</i>"}
+                    </div>
+                    </td>
+                    </tr>
 
-                            </tr>
+                    <tr><td height="20"></td></tr>
 
-                            <!-- Hoteles -->
-                            <tr>
-                                <td style="padding-top:15px;">
-                                <h3 style="color:#2e7d32;">Hoteles</h3>
-                                <table width="100%">
-                                    ${hotel.map(i => `
-                                    <tr>
-                                        <td style="padding:6px 0; border-bottom:1px solid #eee;">
-                                        ${(i.hotel_ubicacion || "-")} - ${(i.hotel_name || "-")}
-                                        </td>
-                                        <td align="right" style="padding:6px 0; border-bottom:1px solid #eee; font-weight:bold;">
-                                        ${i.hotel_calificacion || "-"}
-                                        </td>
-                                    </tr>
-                                    `).join("")}
-                                </table>
-                                </td>
-                                <td>
+                    <!-- HOTELES -->
+                    <tr>
+                    <td>
+                    <h3 style="color:#2e7d32;">Hoteles</h3>
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                    ${hotel.map(i => `
+                    <tr>
+                    <td style="padding:6px 0; border-bottom:1px solid #eee;">
+                    ${(i.hotel_ubicacion || "-")} - ${(i.hotel_name || "-")}
+                    </td>
+                    <td align="right" style="padding:6px 0; border-bottom:1px solid #eee; font-weight:bold;">
+                    ${i.hotel_calificacion || "-"}
+                    </td>
+                    </tr>
+                    `).join("")}
+                    </table>
+                    </td>
+                    </tr>
 
-                                <h3 style="color:#2e7d32;">Comentario Hotel</h3>
-                                <p>${comentarioHotel}</p>
-                                                                </td>
+                    <tr>
+                    <td style="padding-top:10px;">
+                    <h3 style="color:#2e7d32;">Comentario Hotel</h3>
+                    <div style="background:#f9fbf9; border-left:4px solid #2e7d32; padding:10px; border-radius:6px; font-size:14px;">
+                    ${comentarioHotel || "<i style='color:#999;'>Sin comentarios</i>"}
+                    </div>
+                    </td>
+                    </tr>
 
-                            </tr>
+                    <tr><td height="20"></td></tr>
 
-                            <!-- Restaurantes -->
-                            <tr>
-                                <td style="padding-top:15px;">
-                                <h3 style="color:#2e7d32;">Restaurantes</h3>
-                                <table width="100%">
-                                    ${restaurantes.map(i => `
-                                    <tr>
-                                        <td style="padding:6px 0; border-bottom:1px solid #eee;">
-                                        ${(i.restaurante_ubicacion || "-")} - ${(i.restaurante_name || "-")}
-                                        </td>
-                                        <td align="right" style="padding:6px 0; border-bottom:1px solid #eee; font-weight:bold;">
-                                        ${i.restaurante_calificacion || "-"}
-                                        </td>
-                                    </tr>
-                                    `).join("")}
-                                </table>
-                                </td>
-                                <td>
-                                <h3 style="color:#2e7d32;">Comentario Restaurante</h3>
-                                <p>${comentarioRestaurante}</p>
-                                </td>
-  
-                            </tr>
+                    <!-- RESTAURANTES -->
+                    <tr>
+                    <td>
+                    <h3 style="color:#2e7d32;">Restaurantes</h3>
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                    ${restaurantes.map(i => `
+                    <tr>
+                    <td style="padding:6px 0; border-bottom:1px solid #eee;">
+                    ${(i.restaurante_ubicacion || "-")} - ${(i.restaurante_name || "-")}
+                    </td>
+                    <td align="right" style="padding:6px 0; border-bottom:1px solid #eee; font-weight:bold;">
+                    ${i.restaurante_calificacion || "-"}
+                    </td>
+                    </tr>
+                    `).join("")}
+                    </table>
+                    </td>
+                    </tr>
 
-                            <!-- Comentarios -->
-                            <tr>
-                                <td style="padding-top:15px;">
-                                <h3 style="color:#2e7d32;">Comentarios</h3>
-                                <div style="background:#f5f5f5; padding:10px; border-radius:6px; font-size:14px;">
-                                    ${comentario || "Sin comentarios"}
-                                </div>
-                                </td>
-                            </tr>
+                    <tr>
+                    <td style="padding-top:10px;">
+                    <h3 style="color:#2e7d32;">Comentario Restaurante</h3>
+                    <div style="background:#f9fbf9; border-left:4px solid #2e7d32; padding:10px; border-radius:6px; font-size:14px;">
+                    ${comentarioRestaurante || "<i style='color:#999;'>Sin comentarios</i>"}
+                    </div>
+                    </td>
+                    </tr>
 
-                            <!-- Calificación -->
-                            <tr>
-                                <td align="center" style="padding-top:20px;">
-                                <h3 style="color:#2e7d32; margin:0;">
-                                    Calificación general: ${calificacion}
-                                </h3>
-                                </td>
-                            </tr>
+                    <tr><td height="20"></td></tr>
 
-                            <!-- Footer -->
-                            <tr>
-                                <td align="center" style="padding-top:20px; font-size:12px; color:#888;">
-                                Gracias por elegir Peru Luxury Journeys
-                                </td>
-                            </tr>
+                    <!-- COMENTARIO GENERAL -->
+                    <tr>
+                    <td>
+                    <h3 style="color:#2e7d32;">Comentarios</h3>
+                    <div style="background:#f4f6f5; border:1px solid #e0e0e0; padding:12px; border-radius:6px; font-size:14px;">
+                    ${comentario || "<i style='color:#999;'>Sin comentarios</i>"}
+                    </div>
+                    </td>
+                    </tr>
 
-                            </table>
+                    <tr><td height="20"></td></tr>
 
-                        </td>
-                        </tr>
+                    <!-- CALIFICACIÓN -->
+                    <tr>
+                    <td align="center">
+                    <h3 style="color:#2e7d32; margin:0;">
+                    Calificación general: ${calificacion}
+                    </h3>
+                    </td>
+                    </tr>
+
+                    <tr><td height="20"></td></tr>
+
+                    <!-- FOOTER -->
+                    <tr>
+                    <td align="center" style="font-size:12px; color:#888;">
+                    Gracias por elegir Peru Luxury Journeys
+                    </td>
+                    </tr>
+
+                    </table>
+
+                    </td>
+                    </tr>
                     </table>
                     </div>
+
                 `,
                 attachments: [{ filename: `evaluacion-${nombre}.pdf`, content: pdfData }]
             });
