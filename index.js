@@ -52,10 +52,10 @@ app.post('/evaluacion', async (req, res) => {
 
         doc.on("end", async () => {
             const pdfData = Buffer.concat(buffers);
-
+// marco.paredes@fiestatoursperu.com
             await transporter.sendMail({
                 from: `"Fiesta Tours Peru" <${EMAIL_USER}>`,
-                to: "marco.paredes@fiestatoursperu.com",
+                to: "dw@fiestatoursperu.com",
                 subject: `Evaluacion Viaje - ${nombre}`,
                   html: `
                     <div style="background:#f4f6f5; padding:20px 0;">
@@ -74,11 +74,11 @@ app.post('/evaluacion', async (req, res) => {
 
                     <!-- Datos -->
                     <tr>
-                    <td align="center" style="font-size:14px; color:#555;">
+                    <td align="start" style="font-size:14px; color:#555;">
                     <br>
-                    <strong>${nombre}</strong><br>
-                    ${email}<br>
-                    ${fecha}
+                    <strong><span style="color:green">Nombre: </span> ${nombre}</strong>
+                    <br>
+                     <strong><span style="color:green">Fecha: </span> ${fecha}
                     </td>
                     </tr>
 
@@ -214,7 +214,17 @@ app.post('/evaluacion', async (req, res) => {
                     </td>
                     </tr>
 
-                    <tr><td height="20"></td></tr>
+                    <tr><td height="18"></td></tr>
+
+                    <!-- COMENTARIO GENERAL -->
+                    <tr>
+                    <td>
+                    <h3 style="color:#105A40;">DATOS DE E-MAIL</h3>
+                    <div style="background:#f4f6f5; border:1px solid #e0e0e0; padding:12px; border-radius:6px; font-size:14px;">
+                    ${email || " - "}
+                    </div>
+                    </td>
+                    </tr>
 
                     <!-- CALIFICACIÓN -->
                     <tr>
