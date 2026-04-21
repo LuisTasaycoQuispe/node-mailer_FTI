@@ -88,8 +88,12 @@ app.post('/evaluacion', async (req, res) => {
                                     `).join("")}
                                 </table>
                                 </td>
+                                <td>
+
                                 <h3 style="color:#2e7d32;">Comentario Hotel Transfer</h3>
                                 <p>${comentarioHotelTransfer}</p>
+                                                                </td>
+
                             </tr>
 
                             <!-- Tours -->
@@ -109,8 +113,12 @@ app.post('/evaluacion', async (req, res) => {
                                     `).join("")}
                                 </table>
                                 </td>
+                                <td>
+
                                 <h3 style="color:#2e7d32;">Comentario Tours</h3>
                                 <p>${comentariosToursGuia}</p>
+                                                                </td>
+
                             </tr>
 
                             <!-- Hoteles -->
@@ -130,8 +138,12 @@ app.post('/evaluacion', async (req, res) => {
                                     `).join("")}
                                 </table>
                                 </td>
-                                 <h3 style="color:#2e7d32;">Comentario Hotel</h3>
+                                <td>
+
+                                <h3 style="color:#2e7d32;">Comentario Hotel</h3>
                                 <p>${comentarioHotel}</p>
+                                                                </td>
+
                             </tr>
 
                             <!-- Restaurantes -->
@@ -151,9 +163,11 @@ app.post('/evaluacion', async (req, res) => {
                                     `).join("")}
                                 </table>
                                 </td>
+                                <td>
                                 <h3 style="color:#2e7d32;">Comentario Restaurante</h3>
                                 <p>${comentarioRestaurante}</p>
-                                        
+                                </td>
+  
                             </tr>
 
                             <!-- Comentarios -->
