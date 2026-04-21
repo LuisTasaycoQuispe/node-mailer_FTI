@@ -29,7 +29,7 @@ const transporter = nodemailer.createTransport({
 });
 
 app.post('/evaluacion', async (req, res) => {
-    const { nombre, email, fecha, hotelTransfer = [], restaurantes = [], tours = [], hotel = [], comentarioHotelTransfer,comentarioRestaurante, comentarioHotel, comentariosToursGuia,comentario, calificacion } = req.body;
+    const { idioma, nombre, email, fecha, hotelTransfer = [], restaurantes = [], tours = [], hotel = [], comentarioHotelTransfer,comentarioRestaurante, comentarioHotel, comentariosToursGuia,comentario, calificacion } = req.body;
 
     try {
          const doc = new PDFDocument({ margin: 50 });
@@ -63,13 +63,14 @@ app.post('/evaluacion', async (req, res) => {
                     <!-- Datos -->
                     <tr>
                     <td align="center" style="font-size:14px; color:#555;">
+                    <strong><span style="color:green;">Idioma: </span>${idioma}</strong><br>
                     <strong>${nombre}</strong><br>
                     ${email}<br>
                     ${fecha}
                     </td>
                     </tr>
 
-                    <tr><td height="20"></td></tr>
+                    <tr><td height="10"></td></tr>
 
                     <!-- HOTEL TRANSFER -->
                     <tr>
