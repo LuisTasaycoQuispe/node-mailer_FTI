@@ -53,9 +53,10 @@ app.post('/evaluacion', async (req, res) => {
         doc.on("end", async () => {
             const pdfData = Buffer.concat(buffers);
 // marco.paredes@fiestatoursperu.com
+//  repevacusco@gmail.com
             await transporter.sendMail({
                 from: `"Fiesta Tours Peru" <${EMAIL_USER}>`,
-                to: "marco.paredes@fiestatoursperu.com, repevacusco@gmail.com",
+                to: "dw.paredes@fiestatoursperu.com",
                 subject: `Evaluacion Viaje - ${nombre}`,
                   html: `
                     <div style="background:#f4f6f5; padding:20px 0;">
