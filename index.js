@@ -43,15 +43,6 @@ app.post('/evaluacion', async (req, res) => {
         calificacion
     } = req.body;
 
-    const idioma = (req.body.idioma || "").toLowerCase();
-
-    const idiomasValidos = {
-        es: "Español",
-        en: "English",
-        pr: "Portugués"
-    };
-
-    const idiomaFinal = idiomasValidos[idioma] || "Español";
     try {
 
         const doc = new PDFDocument({ margin: 50 });
