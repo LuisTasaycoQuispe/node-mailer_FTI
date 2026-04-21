@@ -3,15 +3,9 @@ const nodemailer = require('nodemailer');
 const cors = require('cors');
 const PDFDocument = require("pdfkit");
 
-
-const corsOptions = {
-  origin: '*',
-  optionsSuccessStatus: 200
-};
-
-
 const app = express();
-app.use(cors(corsOptions))
+
+app.use(cors({ origin: '*', optionsSuccessStatus: 200 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -29,10 +23,21 @@ const transporter = nodemailer.createTransport({
 });
 
 app.post('/evaluacion', async (req, res) => {
-    const { idioma, nombre, email, fecha, hotelTransfer = [], restaurantes = [], tours = [], hotel = [], comentarioHotelTransfer,comentarioRestaurante, comentarioHotel, comentariosToursGuia,comentario, calificacion } = req.body;
+    const {
+        idioma, nombre, email, fecha,
+        hotelTransfer = [], restaurantes = [],
+        tours = [], hotel = [],
+        comentarioHotelTransfer,
+        comentarioRestaurante,
+        comentarioHotel,
+        comentariosToursGuia,
+        comentario,
+        calificacion
+    } = req.body;
 
     try {
-         const doc = new PDFDocument({ margin: 50 });
+
+        const doc = new PDFDocument({ margin: 50 });
         let buffers = [];
 
         doc.on("data", buffers.push.bind(buffers));
@@ -40,12 +45,11 @@ app.post('/evaluacion', async (req, res) => {
         doc.on("end", async () => {
             const pdfData = Buffer.concat(buffers);
 
-            // marco.paredes@fiestatoursperu.com
             await transporter.sendMail({
                 from: `"Fiesta Tours Peru" <${EMAIL_USER}>`,
                 to: "dw@fiestatoursperu.com",
                 subject: `Evaluacion Viaje - ${nombre}`,
-                html: `
+                  html: `
                     <div style="background:#f4f6f5; padding:20px 0;">
                     <table width="100%" cellpadding="0" cellspacing="0" style="font-family: Arial, sans-serif;">
                     <tr>
@@ -63,7 +67,7 @@ app.post('/evaluacion', async (req, res) => {
                     <!-- Datos -->
                     <tr>
                     <td align="center" style="font-size:14px; color:#555;">
-                    <strong><span style="color:green;">Idioma: </span>${idioma}</strong><br>
+                    <strong><span style="color:green;">Idioma Registrado: </span>${idioma}</strong><br>
                     <strong>${nombre}</strong><br>
                     ${email}<br>
                     ${fecha}
@@ -230,64 +234,48 @@ app.post('/evaluacion', async (req, res) => {
                     </div>
 
                 `,
-                attachments: [{ filename: `evaluacion-${nombre}.pdf`, content: pdfData }]
+                attachments: [
+                    {
+                        filename: `evaluacion-${nombre}.pdf`,
+                        content: pdfData
+                    }
+                ]
             });
 
             res.json({ mensaje: '¡Correo enviado con éxito!' });
         });
 
+        // 🎨 COLORES
         const green = "#2e7d32";
         const gray = "#666";
-        const pageWidth = doc.page.width;
-        const centerX = pageWidth / 2;
 
-        // doc.image(path.join("path/logo-fti-esp.png"), centerX - 40, 30, { width: 80 });
+        // 🔥 CONTROL DE SALTO DE PÁGINA
+        const checkPageBreak = (margin = 80) => {
+            if (doc.y > doc.page.height - margin) {
+                doc.addPage();
+            }
+        };
 
-        // doc.moveDown(4);
-
+        // 🧱 HEADER
         doc.fillColor("#223e58")
             .font("Helvetica-Bold")
             .fontSize(18)
             .text("Resumen de Evaluación", { align: "center" });
 
-        doc.moveDown(0.4);
-
-
-    doc.moveDown(0.5);
-
-    const labelColor = "#999";
-    const valueColor = "#222";
-
-    const drawField = (label, value) => {
-        doc
-            .fillColor(labelColor)
-            .font("Helvetica-Bold")
-            .text(label, { continued: true });
-
-        doc
-            .fillColor(valueColor)
-            .font("Helvetica")
-            .text(value || "-", { align: "left" });
-
-        doc.moveDown(0.3);
-    };
-
-    
-    doc.moveDown(1);
+        doc.moveDown(1);
 
         doc.fillColor(gray)
             .fontSize(10)
-            .font("Helvetica")
             .text(nombre || "-", { align: "center" })
             .text(email || "-", { align: "center" })
             .text(fecha || "-", { align: "center" });
 
         doc.moveDown(2);
 
-
-        doc.moveDown(2);
-
+        // 📊 SECCIONES
         const drawSection = (titulo, data, getName, getValue) => {
+            checkPageBreak();
+
             doc.fillColor(green)
                 .font("Helvetica-Bold")
                 .fontSize(12)
@@ -299,11 +287,13 @@ app.post('/evaluacion', async (req, res) => {
             const endX = 500;
 
             data.forEach(item => {
+                checkPageBreak();
+
                 const y = doc.y;
 
                 doc.fillColor("#000")
-                    .font("Helvetica")
                     .fontSize(10)
+                    .font("Helvetica")
                     .text(getName(item), startX, y, {
                         width: 300
                     });
@@ -328,122 +318,60 @@ app.post('/evaluacion', async (req, res) => {
             doc.moveDown(1);
         };
 
-        drawSection(
-            "Hotel Transfer",
-            hotelTransfer,
-            (i) => i.hotelTransfer_name || "-",
-            (i) => i.hotelTransfer_calificacion || "-"
+        // 📝 COMENTARIOS
+        const drawComment = (titulo, texto) => {
+            checkPageBreak();
+
+            doc.fillColor(green)
+                .font("Helvetica-Bold")
+                .fontSize(12)
+                .text(titulo);
+
+            doc.moveDown(0.3);
+
+            doc.fillColor("#333")
+                .font("Helvetica")
+                .fontSize(10)
+                .text(texto || "Sin comentarios", {
+                    width: 480
+                });
+
+            doc.moveDown(2);
+        };
+
+        // 🔽 CONTENIDO
+        drawSection("Hotel Transfer", hotelTransfer,
+            i => i.hotelTransfer_name || "-",
+            i => i.hotelTransfer_calificacion || "-"
         );
 
-        doc.fillColor(green)
-            .font("Helvetica-Bold")
-            .fontSize(12)
-            .text("Comentario Hotel Transfer");
+        drawComment("Comentario Hotel Transfer", comentarioHotelTransfer);
 
-        doc.moveDown(0.3);
-
-        doc.fillColor("#333")
-            .font("Helvetica")
-            .fontSize(10)
-            .text(comentarioHotelTransfer || "Sin comentarios", {
-                width: 480,
-                align: "left"
-            });
-
-        doc.moveDown(2);
-
-        drawSection(
-            "Tours y Guías",
-            tours,
-            (i) => i.tours_name || "-",
-            (i) => i.tours_calificacion || "-"
+        drawSection("Tours y Guías", tours,
+            i => i.tours_name || "-",
+            i => i.tours_calificacion || "-"
         );
 
-        doc.fillColor(green)
-            .font("Helvetica-Bold")
-            .fontSize(12)
-            .text("Comentario Tours Guia");
+        drawComment("Comentario Tours Guia", comentariosToursGuia);
 
-        doc.moveDown(0.3);
-
-        doc.fillColor("#333")
-            .font("Helvetica")
-            .fontSize(10)
-            .text(comentariosToursGuia || "Sin comentarios", {
-                width: 480,
-                align: "left"
-            });
-
-        doc.moveDown(2);
-
-        drawSection(
-            "Hoteles",
-            hotel,
-            (i) => `${i.hotel_ubicacion || "-"} - ${i.hotel_name || "-"}`,
-            (i) => i.hotel_calificacion || "-"
+        drawSection("Hoteles", hotel,
+            i => `${i.hotel_ubicacion || "-"} - ${i.hotel_name || "-"}`,
+            i => i.hotel_calificacion || "-"
         );
 
+        drawComment("Comentario Hotel", comentarioHotel);
 
-
-        doc.fillColor(green)
-            .font("Helvetica-Bold")
-            .fontSize(12)
-            .text("Comentario Hotel");
-
-        doc.moveDown(0.3);
-
-        doc.fillColor("#333")
-            .font("Helvetica")
-            .fontSize(10)
-            .text(comentarioHotel || "Sin comentarios", {
-                width: 480,
-                align: "left"
-            });
-
-        doc.moveDown(2);
-
-
-        drawSection(
-            "Restaurantes",
-            restaurantes,
-            (i) => `${i.restaurante_ubicacion || "-"} - ${i.restaurante_name || "-"}`,
-            (i) => i.restaurante_calificacion || "-"
+        drawSection("Restaurantes", restaurantes,
+            i => `${i.restaurante_ubicacion || "-"} - ${i.restaurante_name || "-"}`,
+            i => i.restaurante_calificacion || "-"
         );
 
-        doc.fillColor(green)
-            .font("Helvetica-Bold")
-            .fontSize(12)
-            .text("Comentario Restaurantes");
+        drawComment("Comentario Restaurantes", comentarioRestaurante);
 
-        doc.moveDown(0.3);
+        drawComment("Comentarios Generales", comentario);
 
-        doc.fillColor("#333")
-            .font("Helvetica")
-            .fontSize(10)
-            .text(comentarioRestaurante || "Sin comentarios", {
-                width: 480,
-                align: "left"
-            });
-
-        doc.moveDown(2);
-
-
-        doc.fillColor(green)
-            .font("Helvetica-Bold")
-            .fontSize(12)
-            .text("Comentarios Generales y/o Sugerencias");
-
-        doc.moveDown(0.3);
-
-        doc.fillColor("#333")
-            .font("Helvetica")
-            .fontSize(10)
-            .text(comentario || "Sin comentarios", {
-                width: 480,
-                align: "left"
-            });
-
-        doc.moveDown(2);
+        // ⭐ FINAL
+        checkPageBreak();
 
         doc.fillColor("#1f1f1f")
             .font("Helvetica-Bold")
