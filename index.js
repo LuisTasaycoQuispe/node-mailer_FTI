@@ -6,7 +6,7 @@ const app = express();
 const cors = require('cors');
 
 const corsOptions = {
-    origin: 'https://limited-cathy-peru-luxury-54ebd510.koyeb.app',
+    origin: 'https://evaluacion-viajes.netlify.app',
     methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: ['Content-Type'],
     credentials: false
