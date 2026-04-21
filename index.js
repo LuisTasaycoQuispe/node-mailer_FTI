@@ -5,14 +5,21 @@ const PDFDocument = require("pdfkit");
 const app = express();
 const cors = require('cors');
 
-const corsOptions = {
-    origin: 'https://evaluacion-viajes.netlify.app',
-    methods: ['GET', 'POST', 'OPTIONS'],
-    allowedHeaders: ['Content-Type'],
-    credentials: false
-};
+const allowedOrigins = [
+  'https://evaluacion-viajes.netlify.app',
+  'http://localhost:4321'
+];
 
-app.use(cors(corsOptions));
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(null, true); 
+    }
+  }
+}));
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
