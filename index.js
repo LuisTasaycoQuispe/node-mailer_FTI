@@ -65,7 +65,7 @@ app.post('/evaluacion', async (req, res) => {
 // repevacusco@gmail.com
             await transporter.sendMail({
                 from: `"Fiesta Tours Peru" <${EMAIL_USER}>`,
-                to: "dw@fiestatoursperu.com, marco.paredes@fiestatoursperu.com",
+                to: "repevacusco@gmail.com, marco.paredes@fiestatoursperu.com",
                 subject: `Evaluacion Viaje - ${nombre}`,
                   html: `
                     <div style="background:#f4f6f5; padding:20px 0;">
