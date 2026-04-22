@@ -1,13 +1,14 @@
 const express = require('express');
 const nodemailer = require('nodemailer');
 const PDFDocument = require("pdfkit");
+const cors = require('cors');
 
 const app = express();
-const cors = require('cors');
 
 const allowedOrigins = [
   'https://evaluacion-viajes.netlify.app',
-  'http://localhost:4321'
+  'https://supreme-space-waddle-g475p45j95rrfqj9-5173.app.github.dev',
+  'https://effective-guacamole-5gx49g4j64rx2vvrx-4321.app.github.dev'
 ];
 
 app.use(cors({
@@ -15,11 +16,12 @@ app.use(cors({
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(null, true); 
+      callback(new Error("No permitido por CORS"));
     }
-  }
+  },
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type']
 }));
-
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -28,13 +30,13 @@ const EMAIL_USER = "luistasayco3030@gmail.com";
 const EMAIL_PASS = "xkii szmn wopp rqdr";
 
 const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 465,
-    secure: true,
-    auth: {
-        user: EMAIL_USER,
-        pass: EMAIL_PASS,
-    }
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
+  auth: {
+    user: EMAIL_USER,
+    pass: EMAIL_PASS,
+  }
 });
 
 app.post('/evaluacion', async (req, res) => {
@@ -63,7 +65,7 @@ app.post('/evaluacion', async (req, res) => {
 // repevacusco@gmail.com
             await transporter.sendMail({
                 from: `"Fiesta Tours Peru" <${EMAIL_USER}>`,
-                to: "dw@fiestatoursperu.com",
+                to: "dw@fiestatoursperu.com, marco.paredes@gfiestatoursperu.com",
                 subject: `Evaluacion Viaje - ${nombre}`,
                   html: `
                     <div style="background:#f4f6f5; padding:20px 0;">
