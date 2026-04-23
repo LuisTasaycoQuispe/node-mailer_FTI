@@ -5,25 +5,7 @@ const cors = require('cors');
 
 const app = express();
 
-const allowedOrigins = [
-  'https://evaluacion-viajes.netlify.app',
-  'https://fiestatoursperu.com/TE-PERU',
-  'https://supreme-space-waddle-g475p45j95rrfqj9-5173.app.github.dev',
-  'https://effective-guacamole-5gx49g4j64rx2vvrx-4321.app.github.dev'
-];
-
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("No permitido por CORS"));
-    }
-  },
-  methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type']
-}));
-
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
