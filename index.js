@@ -9,8 +9,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const EMAIL_USER = "luistasayco3030@gmail.com";
-const EMAIL_PASS = "xkii szmn wopp rqdr";
+const EMAIL_USER = "noreply.fiestatoursperu@gmail.com";
+const EMAIL_PASS = "ztcn lsxw sbwy mktw";
 
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
@@ -49,6 +49,7 @@ app.post('/evaluacion', async (req, res) => {
             await transporter.sendMail({
                 from: `"Fiesta Tours Peru" <${EMAIL_USER}>`,
                 to: "repevacusco@gmail.com, marco.paredes@fiestatoursperu.com",
+                // to: "dw@fiestatoursperu.com",
                 subject: `Evaluacion Viaje - ${nombre}`,
                   html: `
                     <div style="background:#f4f6f5; padding:20px 0;">
